@@ -2,6 +2,8 @@
 
 #include <easylogging++.h>
 
+#include "glm/ext/vector_float2.hpp"
+#include "pheromone_cell.h"
 #include "world.h"
 
 #include <cmath>
@@ -55,6 +57,38 @@ void Ant::update(int deltaTime, World &world) {
   glm::vec2 movement2 = glm::vec2(movement3.x, movement3.y);
   position += movement2 * speed;
 }
+
+void Ant::senseAhead(World &world, int &resultHeading) {
+  // Three point sensinga
+  CellGrid<PheromoneCell> pGrid = world.m_pheromoneGrid;
+  glm::vec2 leftSensor;
+  glm::vec2 middleSensor;
+  glm::vec2 rightSensor;
+
+  float valueLeftSensor =
+      pGrid.get(leftSensor.x, leftSensor.y)
+          .strengths[static_cast<int>(PheromoneType::toHome)];
+  float valueMiddleSensor =
+      pGrid.get(middleSensor.x, middleSensor.y)
+          .strengths[static_cast<int>(PheromoneType::toHome)];
+  float valueRightSensor =
+      pGrid.get(rightSensor.x, rightSensor.y)
+          .strengths[static_cast<int>(PheromoneType::toHome)];
+
+  if (valueLeftSensor > valueRightSensor &&
+      valueLeftSensor > valueMiddleSensor) {
+    // Left sensor is the biggest
+    resultHeading = 20;
+  } else if (valueRightSensor > valueLeftSensor &&
+             valueRightSensor > valueMiddleSensor) {
+    // Right sensor is the biggest
+    resultHeading = 20;
+  } else {
+    // Middle sensor is the biggest
+    resultHeading = 2;
+  }
+}
+
 Ant::Ant(float x, float y, float heading)
     : position(x, y), heading(heading), speed(0.1), food(0) {};
 } // namespace al

@@ -8,13 +8,16 @@ public:
       : m_cells(pow4(divLevel)), m_size(size), m_rows(pow2(divLevel)),
         m_cellSize(size / m_rows) {}
 
-  T getC(int x, int y) const { return m_cells.at(coordToIndex(x, y)); }
   T get(float x, float y) const { return m_cells.at(pointToIndex(x, y)); }
-
-  void setC(int x, int y, T value) { m_cells[coordToIndex(x, y)] = value; };
   void set(float x, float y, T value) { m_cells[pointToIndex(x, y)] = value; };
+
+private:
+  T getC(int x, int y) const { return m_cells.at(coordToIndex(x, y)); }
+  void setC(int x, int y, T value) { m_cells[coordToIndex(x, y)] = value; };
+
   static size_t pow2(int x) { return static_cast<size_t>(std::pow(2.0, x)); }
   static size_t pow4(int x) { return static_cast<size_t>(std::pow(4.0, x)); }
+
   int coordToIndex(int x, int y) const { return y * m_rows + x; };
   int pointToIndex(float x, float y) const {
     int col = static_cast<int>(x / m_cellSize);

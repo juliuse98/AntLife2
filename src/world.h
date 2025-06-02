@@ -20,13 +20,13 @@ public:
   void update();
   void thread_update(int ant_start_index, int ant_end_index);
   inline glm::vec2 getFoodLocation() const { return m_foodLocation; }
+  CellGrid<PheromoneCell> m_pheromoneGrid;
 
 private:
   std::vector<Ant> m_ants;
   std::vector<std::thread> m_antThreads;
   std::vector<int> m_food;
   glm::vec2 m_foodLocation;
-  CellGrid<PheromoneCell> m_pheromoneGrid;
 
   // --- <> Threading <> --- //
   std::mutex mtx;
