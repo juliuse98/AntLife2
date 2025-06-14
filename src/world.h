@@ -21,6 +21,7 @@ public:
   void thread_update(int ant_start_index, int ant_end_index);
   inline glm::vec2 getFoodLocation() const { return m_foodLocation; }
   CellGrid<PheromoneCell> m_pheromoneGrid;
+  const std::vector<Ant> &getAnts() const { return m_ants; };
 
 private:
   std::vector<Ant> m_ants;

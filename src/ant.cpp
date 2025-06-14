@@ -16,7 +16,7 @@ void Ant::update(int deltaTime, World &world) {
 
   glm::vec2 foodLocation = world.getFoodLocation();
   float distanceToFood = glm::distance(foodLocation, position);
-  if (food <= 0 && distanceToFood <= ANT_VIEW_DISTANCE) {
+  if (false && food <= 0 && distanceToFood <= ANT_VIEW_DISTANCE) {
     LOG(INFO) << "-=-=-=-=-=-=-=-=-=-=UPDATE=-=-=-=-=-=-=-=-=-=-=-=-=";
     LOG(INFO) << "Food " << food << " distanceToFood " << distanceToFood
               << " ANT VIEW DISTANCE " << ANT_VIEW_DISTANCE;
@@ -43,7 +43,8 @@ void Ant::update(int deltaTime, World &world) {
     float sign = 1 - 2 * (std::fmod(static_cast<int>(position.x) +
                                         static_cast<int>(position.y),
                                     2));
-    heading = std::fmod(heading + 1.0f, 360.0f) * sign;
+    sign = static_cast<int>(std::rand() % 2) * 2 - 1;
+    heading = std::fmod(heading + 10.0f * sign, 360.0f);
   }
 
   // Apply direction
@@ -90,5 +91,5 @@ void Ant::senseAhead(World &world, int &resultHeading) {
 }
 
 Ant::Ant(float x, float y, float heading)
-    : position(x, y), heading(heading), speed(0.1), food(0) {};
+    : position(x, y), heading(heading), speed(1), food(0) {};
 } // namespace al
