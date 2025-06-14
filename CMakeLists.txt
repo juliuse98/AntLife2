@@ -24,9 +24,27 @@ set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
 
 add_executable(antLife ${SOURCE_FILES})
 
-include_directories( src/ deps/glm/ ./deps/glm/glm/gtc/ deps/easyloggingpp/ deps/nano-signal-slot/)
+include_directories( src/ deps/glm/ deps/sfml/include/ deps/glm/glm/gtc/ deps/easyloggingpp/ deps/nano-signal-slot/)
 add_definitions(-DELPP_THREAD_SAFE)
+set(SFML_STATIC_LIBRARIES TRUE)
+add_definitions(-DSFML_STATIC)
 
 
 #add_dependencies(antLife copy_resources)
 add_dependencies(antLife create_compile_commands_link)
+target_link_directories(antLife PRIVATE ./deps/sfml/lib/)
+target_link_libraries(antLife
+  sfml-graphics-s
+  sfml-window-s
+  sfml-system-s
+  opengl32
+  winmm
+  gdi32
+  shell32
+  user32
+  advapi32
+  ole32
+  oleaut32
+  uuid
+  comdlg32
+)
