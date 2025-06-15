@@ -4,12 +4,13 @@
 namespace al {
 World::World(int antCount)
     : stop(false), currentGeneration(0), doneCount(0),
-      m_pheromoneGrid(1000.0f, 6), m_foodLocation(0.0f, 3.01f) {
+      m_pheromoneGrid(1000.0f, 6), m_foodLocation(0.0f, 3.01f),
+      m_size(300, 300) {
   m_ants.reserve(antCount);
 
   for (int i = 0; i < antCount; ++i) {
     float heading = 360.0f * i / antCount;
-    m_ants.emplace_back(0, 0, heading);
+    m_ants.emplace_back(m_size.x / 2, m_size.y / 2, heading);
   }
   for (int tc = 0; tc < static_cast<int>(std::ceil(
                             static_cast<double>(antCount) / ANTS_PER_THREAD));
@@ -19,7 +20,7 @@ World::World(int antCount)
     LOG(INFO) << "Create thread with start at " << start << " and end at "
               << end;
     m_antThreads.push_back(
-        std::thread(&World::thread_update, this, start, end));
+        std::thread(&World::thread_update, this, tc, start, end));
   }
 }
 
@@ -63,7 +64,8 @@ void World::update() {
             << generationForThisUpdate << ". Final doneCount: " << doneCount;
 }
 
-void World::thread_update(int ant_start_index, int ant_end_index) {
+void World::thread_update(int thread_index, int ant_start_index,
+                          int ant_end_index) {
   std::size_t lastProcessedGeneration = 0;
 
   while (true) {
